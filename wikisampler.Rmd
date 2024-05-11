@@ -1,0 +1,28 @@
+---
+title: "Untitled"
+author: "Varun Punnam"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(paletteer)
+```
+
+```{r}
+wikisample <- read.csv("wikisample.csv")
+wikisampled <- unite(wikisample, Category1, Category2, col = "Subcategory", sep = "")
+unathletic <- filter(wikisampled, Category3 != "S")
+```
+
+```{r}
+n <- length(unique(unathletic$Subcategory))
+
+# Create the plot
+ggplot(unathletic, aes(Subcategory, fill = Subcategory)) +
+  geom_bar() +
+  coord_flip() +
+  scale_fill_manual(values = paletteer_dynamic("cartography::multi.pal", n))
+```
